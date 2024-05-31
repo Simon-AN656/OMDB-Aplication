@@ -7,6 +7,8 @@ import com.techsimon.screenmatch.model.Episodio;
 import com.techsimon.screenmatch.service.ConsumoApi;
 import com.techsimon.screenmatch.service.ConvierteDatos;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -60,6 +62,22 @@ public class Principal {
                 .collect(Collectors.toList());
 
         episodios.forEach(System.out::println);
+
+        //Busqueda de espisodios a partir del año de estreno
+
+        System.out.println("Indica el año a aprtir del cual deseas ver los episodios");
+        var fecha = teclado.nextInt();
+        teclado.nextLine();
+
+        LocalDate fechaBusqueda = LocalDate.of(fecha, 1, 1);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        episodios.stream()
+                .filter(e -> e.getFechaLanzamiento() != null && e.getFechaLanzamiento().isAfter(fechaBusqueda))
+                .forEach(e -> System.out.println(
+                        "Temporada " + e.getTemporada() +
+                                "Episodio: " + e.getTitulo() +
+                                "Fecha de lanzamiento: " + e.getFechaLanzamiento().format(dtf)
+                ));
 
     }
 }
