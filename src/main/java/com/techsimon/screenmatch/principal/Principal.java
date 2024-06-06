@@ -1,9 +1,6 @@
 package com.techsimon.screenmatch.principal;
 
-import com.techsimon.screenmatch.model.DAtosTemporadas;
-import com.techsimon.screenmatch.model.DatosEpisodes;
-import com.techsimon.screenmatch.model.DatosSerie;
-import com.techsimon.screenmatch.model.Episodio;
+import com.techsimon.screenmatch.model.*;
 import com.techsimon.screenmatch.service.ConsumoApi;
 import com.techsimon.screenmatch.service.ConvierteDatos;
 import java.time.LocalDate;
@@ -82,6 +79,13 @@ public class Principal {
     }
 
     private void mostrarSeriesBuscadas() {
-        datosSeries.forEach(System.out::println);
+        List<Serie> series = new ArrayList<>();
+        series = datosSeries.stream()
+                .map(d -> new Serie(d))
+                .collect(Collectors.toList());
+
+        series.stream()
+                .sorted(Comparator.comparing(Serie::getGenero))
+                .forEach(System.out::println);
     }
 }
