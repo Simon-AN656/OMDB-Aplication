@@ -1,6 +1,7 @@
 package com.techsimon.screenmatch.principal;
 
 import com.techsimon.screenmatch.model.*;
+import com.techsimon.screenmatch.repository.iSerieRepository;
 import com.techsimon.screenmatch.service.ConsumoApi;
 import com.techsimon.screenmatch.service.ConvierteDatos;
 import java.time.LocalDate;
@@ -15,6 +16,11 @@ public class Principal {
     private final String API_KEY = "&apikey=46c89f02";
     private ConvierteDatos conversor = new ConvierteDatos();
     private List<DatosSerie> datosSeries = new ArrayList<>();
+    private iSerieRepository repositorio;
+
+    public Principal(iSerieRepository repository) {
+        this.repositorio = repository;
+    }
 
     public void muetraMenu() {
         var opcion = -1;
@@ -73,19 +79,18 @@ public class Principal {
     }
     private void buscarSerieWeb() {
         DatosSerie datos = getDatosSerie();
-        datosSeries.add(datos);
+        Serie serie  = new Serie(datos);
+        repositorio.save(serie);
         System.out.println(datos);
 
     }
 
     private void mostrarSeriesBuscadas() {
-        List<Serie> series = new ArrayList<>();
-        series = datosSeries.stream()
-                .map(d -> new Serie(d))
-                .collect(Collectors.toList());
+        List<Serie> series = repositorio.findAll();
 
         series.stream()
                 .sorted(Comparator.comparing(Serie::getGenero))
                 .forEach(System.out::println);
     }
+
 }
